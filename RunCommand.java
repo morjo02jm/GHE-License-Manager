@@ -29,9 +29,7 @@ public class RunCommand
             System.out.println( "ExitValue: " + exitValue );
  
             output = buffer.toString();
-        }
-        catch (Throwable t)
-        {
+        }catch (Throwable t){
         	t.printStackTrace();
         }
  
