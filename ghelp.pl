@@ -2,7 +2,7 @@
 
 ############################################################################
 # the script executes suspending use part of the GHE license sharing policy. 
-# Grace Gao - 5/3/2016 
+# Grace Gao - 5/3/2016 for review
 ############################################################################
 
 use strict;
