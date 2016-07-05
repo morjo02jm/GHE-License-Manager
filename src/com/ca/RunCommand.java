@@ -23,7 +23,6 @@ public class RunCommand {
             System.out.println( "ExitValue: " + exitValue );
             output = buffer.toString();
         } catch (Exception e) {
-        	/*e.printStackTrace();*/
 			LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return output;
