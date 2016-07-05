@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger; 
  
 public class RunCommand {
-    private static final Logger LOGGER = Logger.getLogger(RunCommand.class.getName() );
+        private static final Logger LOGGER = Logger.getLogger(RunCommand.class.getName() );
 	public static String execute(String cmd) {
 		String output = null;
         try {
@@ -23,8 +23,7 @@ public class RunCommand {
             System.out.println( "ExitValue: " + exitValue );
             output = buffer.toString();
         } catch (Exception e) {
-        	/*e.printStackTrace();*/
-			LOGGER.log(Level.SEVERE, e.toString(), e);
+	  LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return output;
     }
