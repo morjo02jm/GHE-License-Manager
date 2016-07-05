@@ -2,14 +2,11 @@ package com.ca;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
  
-public class RunCommand
-{
-    public static String execute(String cmd)
-    {
+public class RunCommand {
+    public static String execute(String cmd) {
 		String output = null;
  
-        try
-        {
+        try {
 			String line;
 			StringBuffer buffer = new StringBuffer();
  
@@ -19,8 +16,7 @@ public class RunCommand
 	    InputStreamReader isr = new InputStreamReader( process.getInputStream() );
             BufferedReader br = new BufferedReader( isr );
  
-            while( ( line = br.readLine() ) != null )
-            {
+            while( ( line = br.readLine() ) != null ) {
 			/*	buffer.append( "<br>" ); */
 				buffer.append( line );
 	   		}
@@ -29,12 +25,9 @@ public class RunCommand
             System.out.println( "ExitValue: " + exitValue );
  
             output = buffer.toString();
-        }
-        catch (Throwable t)
-        {
+        } catch (Throwable t) {
         	t.printStackTrace();
         }
- 
         return output;
     }
 
