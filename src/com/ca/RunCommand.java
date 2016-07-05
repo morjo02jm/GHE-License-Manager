@@ -10,7 +10,7 @@ public class RunCommand {
 		String output = null;
         try {
 			String line;
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
             Runtime rt = Runtime.getRuntime();
             Process process = rt.exec(cmd);
 	        InputStreamReader isr = new InputStreamReader( process.getInputStream() );
@@ -23,6 +23,7 @@ public class RunCommand {
             System.out.println( "ExitValue: " + exitValue );
             output = buffer.toString();
         } catch (Exception e) {
+        	/*e.printStackTrace();*/
 			LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return output;
