@@ -1,5 +1,6 @@
 # ghe-license-policy
-Implement GHE license sharing policy ghelp.pl executes suspending account function - remove a account from its corresponding LDAP group and suspend it from GitHub server. A license is release without waiting on GitHub/LDAP sync process.
+Implement GHE license sharing policy.
+ghelp.pl executes suspending account function - remove a account from its corresponding LDAP group and suspend it from GitHub server. A license is released without waiting on GitHub/LDAP sync process.
 usage: perl ghelp.pl Usage: ghelp.pl [options] [values] The script executes GHE license sharing policy.
 
 -h print this help page
