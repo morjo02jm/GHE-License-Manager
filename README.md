@@ -29,7 +29,7 @@ usage: perl ghelp.pl Usage: ghelp.pl [options] [values] The script executes GHE 
 
 -rs [value required] GitHub shell script to query users, default custom-all-users.sh
 
--cp [value required] script to copy over to GitHub virtual appliance
+-cp [value required] script to copy over to GitHub virtual appliance, not used in AutoSys
 
 -key [value required] RSA key to access GitHub through SSH
 
@@ -40,3 +40,4 @@ usage: perl ghelp.pl Usage: ghelp.pl [options] [values] The script executes GHE 
 -u print license and user statistics only
 
 unsuspend.pl executes reactivating a suspended GitHub account - add a suspended GitHub account ID (PMF key) into the corresponding LDAP group. Unsuspend function will be made as user self-service so it will run as an app in Tomcat. Usage: unsuspend.pl PMFKey GitHub_Server
+
