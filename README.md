@@ -29,7 +29,7 @@ usage: perl ghelp.pl Usage: ghelp.pl [options] [values] The script executes GHE 
 
 -rs [value required] GitHub shell script to query users, default custom-all-users.sh
 
--cp [value required] script to copy over to GitHub virtual appliance, not used in AutoSys
+-cp [value required] script to copy over to GitHub virtual appliance
 
 -key [value required] RSA key to access GitHub through SSH
 
