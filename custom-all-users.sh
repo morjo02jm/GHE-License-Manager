@@ -28,6 +28,7 @@ message() {
   exit 1
 }
 
+# replace /tmp by /var/lib/mysql-files
 FILE_PATH="/var/lib/mysql-files/users-$(date +"%Y%m%d%H%M%S").csv"
 
 DISPLAY_HEADER=
@@ -116,5 +117,5 @@ mysql -u root -e "$QUERY" github_enterprise
   cat ${FILE_PATH}
   rm ${FILE_PATH}
 }
-
+#move file out of restricted path
 mv ${FILE_PATH} /tmp
