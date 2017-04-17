@@ -28,7 +28,7 @@ message() {
   exit 1
 }
 
-FILE_PATH="/tmp/users-$(date +"%Y%m%d%H%M%S").csv"
+FILE_PATH="/var/lib/mysql-files/users-$(date +"%Y%m%d%H%M%S").csv"
 
 DISPLAY_HEADER=
 ADMIN_ONLY=
@@ -116,3 +116,5 @@ mysql -u root -e "$QUERY" github_enterprise
   cat ${FILE_PATH}
   rm ${FILE_PATH}
 }
+
+mv ${FILE_PATH} /tmp
