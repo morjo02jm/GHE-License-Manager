@@ -5,7 +5,7 @@ usage: perl ghelp.pl Usage: ghelp.pl [options] [values] The script executes GHE 
 
 -h print this help page
 
--v verbose mode
+-v verbose mode, standout
 
 -s [value required] GitHub server, e.g. github-isl-01.ca.com, default GitHub development server
 
