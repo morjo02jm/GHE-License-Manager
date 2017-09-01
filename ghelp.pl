@@ -315,6 +315,7 @@ sub GetGroupMembers {
    return @members;
 }
 
+# Commenting this function call, as removal of users from DL no longer needed: US358969
 sub ldapdelete {
   my (@pmfs) = @_;
   my ($userdn, $groupdn);
@@ -478,7 +479,10 @@ sub processSuspend {
    printlog ("Suspending users inactive more than $idle days ...\n");  
    printlog ("$count users in process to suspend:");
    printv ("$count users in process to suspend:\n");
-   ldapdelete(@ids); 
+   
+   # Commenting ldapdelete function call, as removal of users from DL no longer needed: US358969
+   # ldapdelete(@ids);
+   
    ghedelete(@ids); # only needed to reactivate user immediately after being suspended
    $ldap = Net::LDAP->new ( "usildc04.ca.com" ) or die "$@";
    $mesg = $ldap->bind( "cn=$ldapusr,ou=Role-Based,ou=ITC Hyderabad,dc=ca,dc=com", password => "$ldappw") or die $!;
