@@ -16,34 +16,51 @@ use MIME::Lite;
 use JSON qw( decode_json );
 use Cwd;
 use Getopt::Long;
+use Config::Simple;
+use Crypt::CBC;
+use Crypt::Blowfish;
+use MIME::Base64;
 
 open STDERR, ">&STDOUT";
 select STDERR; $| = 1;
 select STDOUT; $| = 1;
 
-use vars qw($opt_h $opt_v $opt_s $opt_t $opt_n $opt_w $opt_d $opt_e $opt_wo $opt_u $opt_key $opt_pubkey $opt_rs $opt_cp $opt_gheusr $opt_ghepw $opt_ldapusr $opt_ldappw $opt_ldapgroup);
+use vars qw($opt_h $opt_v $opt_s $opt_t $opt_n $opt_w $opt_d $opt_webserver $opt_e $opt_wo $opt_u $opt_key $opt_pubkey $opt_rs $opt_cp $opt_gheusr $opt_ghepw $opt_ldapusr $opt_ldappw $opt_ldapgroup);
 
-GetOptions('h', 'v', 'wo', 'u', 's=s', 't=i', 'n=i', 'w=i', 'd=i', 'e=s', 'rs=s', 'key=s', 'pubkey=s', 'cp=s', 'gheusr=s', 'ghepw=s', 'ldapusr=s', 'ldasppw=s', 'ldapgroup=s') ||  printusage();
-my $gheserver = $opt_s || "github-isl-01.ca.com";
-my $threshold = $opt_t || 2250; #total 2250 seats
-my $notifythreshhold = $opt_n || 50; 
-my $idle = $opt_d || 90;
-my $warning = $opt_w || 60;
-my $exfile = $opt_e || "exceptions.txt";
-my $gheusr = $opt_ldapusr || "toolsadmin";
-my $ghepw = $opt_ldappw || "";
-my $ldapusr = $opt_ldapusr || "toolsadmin"; 
-my $ldappw = $opt_ldappw || "";
-my $dl = $opt_ldapgroup || "Development-Tools-Access-Group";
-my $rscript = $opt_rs || "custom-all-users.sh";
-my $cp = $opt_cp || $rscript;
-my $key = $opt_key || "c:\\Git\\id_rsa";
-my $pubkey = $opt_pubkey || "c:\\Git\\id_rsa.pub";
-my $gpath = "c:\\Git\\usr\\bin";
+GetOptions('h', 'v', 'wo', 'u', 's=s', 't=i', 'n=i', 'w=i', 'd=i', 'webserver=s', 'e=s', 'rs=s', 'key=s', 'pubkey=s', 'cp=s', 'gheusr=s', 'ghepw=s', 'ldapusr=s', 'ldasppw=s', 'ldapgroup=s') ||  printusage();
+my $cfg = new Config::Simple('config.ini') || die ("config.ini file is not found\n");
+my $verbose = $opt_v || $cfg->param('verbose');
+my $webserver = $opt_webserver || $cfg->param('webserver');
+my $gheserver = $opt_s || $cfg->param('gheserver');
+my $threshold = $opt_t ||$cfg->param('threshold'); #total 2250 seats
+my $notifythreshhold = $opt_n || $cfg->param('notifythreshhold'); 
+my $idle = $opt_d || $cfg->param('idle');
+my $warning = $opt_w || $cfg->param('warning');
+my $exfile = $opt_e || $cfg->param('exfile');
+my $gheusr = $opt_ldapusr || $cfg->param('gheusr');
+my $ghepw = $opt_ldappw || $cfg->param('ghepw');
+my $ldapusr = $opt_ldapusr || $cfg->param('ldapusr');
+my $ldappw = $opt_ldappw || $cfg->param('ldappw');
+my $dl = $opt_ldapgroup || $cfg->param('dl');
+my $rscript = $opt_rs || $cfg->param('rscript');
+my $cp = $opt_cp || $cfg->param('cp');
+my $key = $opt_key || $cfg->param('key');
+my $pubkey = $opt_pubkey || $cfg->param('pubkey');
+my $gpath = $cfg->param('gpath');
+my $sqlpath = $cfg->param('sqlpath');
+my @newadmins = split(/\;/, $cfg->param('newadmins'));
 # for autosys job 
-my $home = "c:\\toolsadmins\\ghe";
+my $home = $cfg->param('home');
+
 my ($logfile, $usage, $htmlusage, $json, $freeseats, $ldap, $mesg, %candidates, %generic, %exceptions, @admins, @elist, @members);
-my @newadmins = ("Team-GIS-ToolsSolutions-Global\@ca.com", "Team-Tools-Deployment\@ca.com");
+my $enckey = "YesGoCA";
+my $cipher = Crypt::CBC->new( -key    => $enckey,
+                             -cipher => 'Blowfish',
+                           );
+$ghepw = decode_base64($ghepw);
+$ghepw = $cipher->decrypt( $ghepw );
+$ldappw = decode_base64($ldappw);
+$ldappw = $cipher->decrypt( $ldappw );
 
 sub printusage {
   print "\nUsage: $0 [options] [values]\n" .
@@ -90,7 +107,7 @@ sub getpastdate {
 }
 
 sub printv {
- $opt_v && print("@_\n");
+ $verbose && print("@_\n");
 }
 
 sub printlog {
@@ -120,8 +137,9 @@ sub curlrun {
   my $jsondata = `curl -s -u $gheusr:\"$ghepw\" $url`; #GitHub tends to cache first
   printlog("Extracting current GHE license usage ...");
   printv("Extracting current GHE license usage ...\n");
-#  printv("Executing $jcmd\n");
+  printv("Executing $jcmd\n");
   $jsondata = `curl -s -u $gheusr:\"$ghepw\" $url`;
+  
   my $rc = $?;
   if (! $rc)
   {
@@ -143,7 +161,7 @@ sub QueryDormantUsers {
 # note SSH2 32k channel I/O limitation and then strange behaviour in scp_get(), so scp system call is used. 
 # SSH2 is a little buggy. This part could be rewritten when time permits. 
 # enhancement if needed
-  if ($opt_cp)
+  if ($cp)
   {
     $cmd = "$gpath\\scp -o 'StrictHostKeyChecking no' -i $key -P 122 $cp admin\@$gheserver:/tmp/";
 	`$cmd` && die "$!";
@@ -164,9 +182,9 @@ sub QueryDormantUsers {
 	  $chan->close;
       $ssh2->disconnect;
   }
-  $fn =~ m/Saving list of users to \'\/tmp\/(.+)\'\.\.\./;
+  $fn =~ m/Saving list of users to \'$sqlpath\/(.+)\'\.\.\./;
   $fname = $1;
-  $cmd = "$gpath\\scp -o 'StrictHostKeyChecking no' -i $key -P 122 admin\@$gheserver:/tmp/$fname .";
+  $cmd = "$gpath\\scp -o 'StrictHostKeyChecking no' -i $key -P 122 admin\@$gheserver:/tmp/$fname ." if ($fname);
   `$cmd` && die "$!";
   open (IN, "<$fname") or die "$!";
   @users = <IN>;
@@ -317,7 +335,8 @@ sub GetGroupMembers {
 
 sub ldapdelete {
   my (@pmfs) = @_;
-  my ($userdn, $groupdn);
+  my $userdn;
+  my $groupdn;
   $ldap = Net::LDAP->new ( "usildc04.ca.com" ) or die "$@";
 #  the best is to query the ldap user first. 
   $mesg = $ldap->bind( "cn=$ldapusr,ou=Role-Based,ou=ITC Hyderabad,dc=ca,dc=com", password => "$ldappw");
@@ -326,9 +345,9 @@ sub ldapdelete {
   foreach my $pmf (@pmfs)
   {
     $userdn = LDAPSearch ("$pmf");
-	print "ldap delete $userdn ...\n";
     if ($userdn && $groupdn)
     {
+	 print "ldap delete $userdn ...\n";
 	 $mesg = $ldap->modify ($groupdn,
 		  delete => {member => "$userdn" }
 		  );
@@ -487,9 +506,8 @@ sub processSuspend {
     if (LDAPSearch($id))
 	{
      $to = "$id\@ca.com";
-#     $to = "gaoyu01\@ca.com";
 	 my $subject = "Your GitHub Account Has Been Suspended"; 
-     my $content = "Dear GitHub Enterprise User, <br><br>Your GitHub Enterprise account $id in http:\/\/$gheserver has been inactive for $idle or more days. It is suspended to release a corresponding seat license occupied. <br>A suspended account will retain the configuration settings in the GitHub application but will lose application access. <p>If you need to obtain access again, please click the link below.<br><br><a href=http://gheadmin.ca.com:8080/ghe/reactivate.jsp?name=$id&server=$gheserver>Reactivate My GitHub Account</a><br><br>Regards,<br>Tools Services Team<p>- Browse https://tools.ca.com for more tools related information<br>- Create Service Desk ticket at http://servicedesk.ca.com if you have any questions or concerns";
+     my $content = "Dear GitHub Enterprise User, <br><br>Your GitHub Enterprise account $id in http:\/\/$gheserver has been inactive for $idle or more days. It is suspended to release a corresponding seat license occupied. <br>A suspended account will retain the configuration settings in the GitHub application but will lose application access. <p>If you need to obtain access again, please click the link below.<br><br><a href=$webserver/ghe/reactivate.jsp?name=$id&server=$gheserver>Reactivate My GitHub Account</a><br>After your account is reactivated, please ensure your activity timestamp is updated by signing in to https:\/\/$gheserver.<br><br>Regards,<br>Tools Services Team<p>- Browse https://tools.ca.com for more tools related information<br>- Create Service Desk ticket at http://servicedesk.ca.com if you have any questions or concerns";
 	 printv ("Account $id has been suspended for inactivity for $idle days - " . printtime());
 	 printlog ("Account $id has been suspended for inactivity for $idle days - " . printtime());
 	 my $msg = MIME::Lite->new(  
@@ -511,7 +529,6 @@ sub processSuspend {
    $smtp = Net::SMTP->new('mail.ca.com', Debug=>1);
    $smtp->mail("$from");
    $smtp->to(@newadmins,{Notify => ['NEVER'], SkipBad => 1} );
-#   $smtp->to('Team-GIS-ToolsSolutions-Global@ca.com', 'Team-Tools-Deployment@ca.com', {Notify => ['NEVER'], SkipBad => 1} );
    $smtp->data();
    $smtp->datasend("MIME-Version: 1.0\nContent-Type: text/html; charset=UTF-8 \n");
    $smtp->datasend("Subject: GitHub Accounts Suspended\n");
@@ -540,7 +557,6 @@ sub processSuspend {
    $smtp = Net::SMTP->new('mail.ca.com', Debug=>1);
    $smtp->mail("$from");
    $smtp->to(@newadmins, {Notify => ['NEVER'], SkipBad => 1} );
-#   $smtp->to('Team-GIS-ToolsSolutions-Global@ca.com', 'Team-Tools-Deployment@ca.com', {Notify => ['NEVER'], SkipBad => 1} );
    $smtp->cc('Team-Tools-ArchitectCoreTeam@ca.com');
    $smtp->data();  
    $smtp->datasend("MIME-Version: 1.0\nContent-Type: text/html; charset=UTF-8 \n");
@@ -576,7 +592,7 @@ $logfile = "GHELP_" . getdate() . ".log";
 open (LOG, ">>$logfile") or die $!;
 printlog("Starting new job on " . printtime());
 printlog("GitHub Server: $gheserver");
-if ((!$opt_v) && (! $opt_u))
+if ((!$verbose) && (! $opt_u))
 {
   open STDERR, ">&LOG";
   select LOG;
