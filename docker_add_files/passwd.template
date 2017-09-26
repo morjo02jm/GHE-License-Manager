@@ -16,9 +16,6 @@ list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
 irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
 gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
 nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
-systemd-timesync:x:100:103:systemd Time Synchronization,,,:/run/systemd:/bin/false
-systemd-network:x:101:104:systemd Network Management,,,:/run/systemd/netif:/bin/false
-systemd-resolve:x:102:105:systemd Resolver,,,:/run/systemd/resolve:/bin/false
-systemd-bus-proxy:x:103:106:systemd Bus Proxy,,,:/run/systemd:/bin/false
-node:x:1000:1000::/home/node:/bin/bash
-node-user:x:${USER_ID}:${GROUP_ID}:Node User for OpenShift:${HOME}:/bin/bash
+_apt:x:100:65534::/nonexistent:/bin/false
+messagebus:x:101:101::/var/run/dbus:/bin/false
+tomcat:x:${USER_ID}:${GROUP_ID}::${HOME}:/usr/sbin/nologin

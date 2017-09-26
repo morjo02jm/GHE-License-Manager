@@ -2,6 +2,11 @@ FROM isl-dsdc.ca.com:5005/tomcat:8-jre8
 
 RUN apt-get update && apt-get install nano
 
+#create application path, so we can CHOWN it later
+ENV APP_ROOT=/usr/local/tomcat
+ENV HOME=${APP_ROOT}
+# RUN mkdir -p ${APP_ROOT}
+
 RUN /bin/rm -rf /usr/local/tomcat/webapps/docs
 RUN /bin/rm -rf /usr/local/tomcat/webapps/examples
 
@@ -23,8 +28,21 @@ COPY docker_add_files/passwd.template /tmp/passwd.template
 
 RUN chmod +x /usr/local/tomcat/bin/unsuspend
 
-CMD ["catalina.sh", "run"]
+RUN groupadd tomcat \
+    && useradd tomcat 
 
+RUN chgrp -R 0 ${APP_ROOT} \
+    && chmod -R g=u ${APP_ROOT} /etc/passwd
+
+#CMD ["catalina.sh", "run"]
+ENTRYPOINT /bin/sh -c "export USER_ID=$(id -u) \
+           && export GROUP_ID=$(id -g) \
+           && envsubst < /tmp/passwd.template > /tmp/passwd \
+           && export LD_PRELOAD=libnss_wrapper.so \
+           && export NSS_WRAPPER_PASSWD=/tmp/passwd \
+           && export NSS_WRAPPER_GROUP=/etc/group \
+           && echo github-events-master ##buildnum## \
+           && yarn start"
 
 
 
