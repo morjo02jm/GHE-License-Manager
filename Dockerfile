@@ -28,8 +28,8 @@ COPY docker_add_files/passwd.template /tmp/passwd.template
 
 RUN chmod +x /usr/local/tomcat/bin/unsuspend
 
-RUN groupadd tomcat \
-    && useradd tomcat 
+# RUN groupadd tomcat \
+#     && useradd tomcat 
 
 RUN chgrp -R 0 ${APP_ROOT} \
     && chmod -R g=u ${APP_ROOT} /etc/passwd
