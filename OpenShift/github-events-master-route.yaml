@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Route
+metadata:
+  name: github-events-master
+spec:
+  to:
+    kind: Service
+    name: github-events-master
