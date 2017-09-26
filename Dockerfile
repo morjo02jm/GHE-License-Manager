@@ -8,8 +8,18 @@ RUN /bin/rm -rf /usr/local/tomcat/webapps/examples
 ADD http://isl-dsdc.ca.com/artifactory/maven-integration-local/com/ca/tools/ghelp.tools.ca.com/0.0.1-SNAPSHOT/ghelp.tools.ca.com-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/ghe.war
 ADD http://isl-dsdc.ca.com/artifactory/generic-integration-local/GitHub%20Enterprise/License%20Sharing%20Policy/unsuspend /usr/local/tomcat/bin/unsuspend
 
+#add nss for openshift passwd modifications
+#the required libnss-wrapper is not in the stable repository
 ADD docker_add_files/unstable.pref /etc/apt/preferences.d/unstable.pref
 ADD docker_add_files/unstable.list /etc/apt/sources.list.d/unstable.list
+RUN apt-get update && apt-get install -y -t unstable libnss-wrapper
+RUN rm -rf /etc/apt/preferences.d/unstable.pref && rm -rf /etc/apt/sources.list.d/unstable.list
+
+# install gettext for envsubst, additional tools needed for nss
+RUN apt-get update && apt-get install -y gettext
+
+# # copy passwd template file for use with OpenShift dynamically created user via nss-wrapper
+COPY docker_add_files/passwd.template /tmp/passwd.template
 
 RUN chmod +x /usr/local/tomcat/bin/unsuspend
 
