@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: github-license-sharing-volume
+  namespace: tools-services-dev
+spec:
+  accessModes:
+     #- ReadWriteMany
+     - ReadWriteOnce
+  selector:
+    matchLabels:
+      project: tools-services-dev
+    purpose: data
+    component: github-license-sharing-volume
+  resources:
+    requests:
+      storage: 25Mi
