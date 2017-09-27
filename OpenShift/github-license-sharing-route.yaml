@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Route
 metadata:
-  name: github-events-master
+  name: github-license-sharing
 spec:
   to:
     kind: Service
-    name: github-events-master
+    name: github-license-sharing

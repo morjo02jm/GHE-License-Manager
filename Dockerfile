@@ -41,7 +41,7 @@ ENTRYPOINT /bin/sh -c "export USER_ID=$(id -u) \
            && export LD_PRELOAD=libnss_wrapper.so \
            && export NSS_WRAPPER_PASSWD=/tmp/passwd \
            && export NSS_WRAPPER_GROUP=/etc/group \
-           && echo github-events-master ##buildnum## \
+           && echo GitHub License Sharing ##buildnum## \
            && yarn start"
 
 

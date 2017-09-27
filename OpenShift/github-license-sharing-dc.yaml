@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: DeploymentConfig
 metadata:
-  name: github-events-master
+  name: github-license-sharing
   namespace: tools-services-dev  
 spec:
   strategy:
@@ -19,18 +19,18 @@ spec:
     #       name: 'github-events-master:latest'
   replicas: 1
   selector:
-    name: github-events-master
+    name: github-license-sharing
   template:
     metadata:
       labels:
-        app: github-events-master
-        name: github-events-master
+        app: github-license-sharing
+        name: github-license-sharing
     spec:
       containers:
-        - name: github-events-master
-          image: isl-dsdc.ca.com:5000/ca/tools/github-events-master:latest
+        - name: github-license-sharing
+          image: isl-dsdc.ca.com:5000/ca/tools/github-license-sharing:latest
           ports:
-            - containerPort: 4000
+            - containerPort: 8080
               protocol: TCP
           resources:
             limits:
