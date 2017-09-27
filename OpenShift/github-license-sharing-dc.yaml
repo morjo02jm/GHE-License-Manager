@@ -28,8 +28,8 @@ spec:
     spec:
       volumes:
         - name: data-volume
-        persistentVolumeClaim:
-          claimName: github-license-sharing-volume
+          persistentVolumeClaim:
+            claimName: github-license-sharing-volume
       containers:
         - name: github-license-sharing
           image: isl-dsdc.ca.com:5000/ca/tools/github-license-sharing:latest
