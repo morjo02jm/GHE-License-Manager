@@ -42,7 +42,7 @@ ENTRYPOINT /bin/sh -c "export USER_ID=$(id -u) \
            && export NSS_WRAPPER_PASSWD=/tmp/passwd \
            && export NSS_WRAPPER_GROUP=/etc/group \
            && echo GitHub License Sharing ##buildnum## \
-           && yarn start"
+           && catalina.sh run"
 
 
 
