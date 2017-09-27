@@ -8,4 +8,3 @@ spec:
   - from:
       kind: DockerImage
       name: github-license-sharing
-    # name: "latest"
