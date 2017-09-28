@@ -43,3 +43,6 @@ spec:
             requests:
               cpu: 1m
               memory: 1Mi
+          volumeMounts:
+            - name: data-volume
+              mountPath: /usr/local/tomcat/webapps2/
