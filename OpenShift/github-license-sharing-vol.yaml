@@ -8,8 +8,8 @@ spec:
      #- ReadWriteMany
      - ReadWriteOnce
   selector:
-    matchLabels:
-      project: tools-services-dev
+    # matchLabels:
+    #   project: tools-services-dev
     purpose: data
     component: github-license-sharing-volume
   resources:
