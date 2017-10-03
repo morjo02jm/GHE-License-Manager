@@ -7,8 +7,8 @@ ENV APP_ROOT=/usr/local/tomcat
 ENV HOME=${APP_ROOT}
 # RUN mkdir -p ${APP_ROOT}
 
-RUN /bin/rm -rf /usr/local/tomcat/webapps/docs
-RUN /bin/rm -rf /usr/local/tomcat/webapps/examples
+#RUN /bin/rm -rf /usr/local/tomcat/webapps/docs
+#RUN /bin/rm -rf /usr/local/tomcat/webapps/examples
 
 ADD http://isl-dsdc.ca.com/artifactory/maven-integration-local/com/ca/tools/ghelp.tools.ca.com/0.0.1-SNAPSHOT/ghelp.tools.ca.com-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/ghe.war
 ADD http://isl-dsdc.ca.com/artifactory/generic-integration-local/GitHub%20Enterprise/License%20Sharing%20Policy/unsuspend /usr/local/tomcat/bin/unsuspend
@@ -42,7 +42,7 @@ ENTRYPOINT /bin/sh -c "export USER_ID=$(id -u) \
            && export NSS_WRAPPER_PASSWD=/tmp/passwd \
            && export NSS_WRAPPER_GROUP=/etc/group \
            && echo GitHub License Sharing ##buildnum## \
-           && cp /usr/local/tomcat/webapps2/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml \           
+           && cp /usr/local/tomcat/webapps2/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml \
            && catalina.sh run"
 
 
