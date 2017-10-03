@@ -42,6 +42,7 @@ ENTRYPOINT /bin/sh -c "export USER_ID=$(id -u) \
            && export NSS_WRAPPER_PASSWD=/tmp/passwd \
            && export NSS_WRAPPER_GROUP=/etc/group \
            && echo GitHub License Sharing ##buildnum## \
+           && cp /usr/local/tomcat/webapps2/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml \           
            && catalina.sh run"
 
 
