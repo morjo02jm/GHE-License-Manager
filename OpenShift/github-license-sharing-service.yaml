@@ -14,4 +14,8 @@ spec:
       protocol: TCP
       port: 8443
       targetPort: 8443
-    
+    - name: ajp
+      protocol: TCP
+      port: 8009
+      targetPort: 8009
+        
