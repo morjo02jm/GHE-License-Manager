@@ -6,3 +6,7 @@ spec:
   to:
     kind: Service
     name: github-license-sharing
+    weight: 100
+  port:
+    targetPort: http
+  wildcardPolicy: None
