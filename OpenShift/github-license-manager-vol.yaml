@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: github-license-sharing-volume
+  name: github-license-manager-volume
   namespace: tools-services-dev
 spec:
   accessModes:
@@ -11,7 +11,7 @@ spec:
     # matchLabels:
     #   project: tools-services-dev
     purpose: data
-    component: github-license-sharing-volume
+    component: github-license-manager-volume
   resources:
     requests:
       storage: 25Mi

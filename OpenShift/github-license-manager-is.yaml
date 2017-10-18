@@ -1,0 +1,10 @@
+apiVersion: "v1"
+kind: ImageStream
+metadata:
+  name: "github-license-manager"
+spec:
+  dockerImageRepository: "isl-dsdc.ca.com:5000/ca/tools/github-license-manager"
+  tags:
+  - from:
+      kind: DockerImage
+      name: github-license-manager

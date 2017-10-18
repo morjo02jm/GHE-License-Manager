@@ -41,7 +41,7 @@ ENTRYPOINT /bin/sh -c "export USER_ID=$(id -u) \
            && export LD_PRELOAD=libnss_wrapper.so \
            && export NSS_WRAPPER_PASSWD=/tmp/passwd \
            && export NSS_WRAPPER_GROUP=/etc/group \
-           && echo GitHub License Sharing ##buildnum## \
+           && echo GitHub License Manager ##buildnum## \
            && cp /usr/local/tomcat/webapps2/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml \
            && cp /usr/local/tomcat/webapps2/context.xml /usr/local/tomcat/webapps/manager/META-INF/context.xml \
            && catalina.sh run"

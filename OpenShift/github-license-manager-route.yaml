@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Route
 metadata:
-  name: github-license-sharing
+  name: github-license-manager
 spec:
   to:
     kind: Service
-    name: github-license-sharing
+    name: github-license-manager
     weight: 100
   port:
     targetPort: http
