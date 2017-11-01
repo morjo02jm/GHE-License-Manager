@@ -22,7 +22,7 @@ String server = request.getParameter("server");
     }
 %>
 <%
-String cmd = "unsuspend.exe "+name+" "+server;
+String cmd = "unsuspend "+name+" "+server;
 String result = RunCommand.execute(cmd);
 out.println (result);
 System.out.println (result + " - " + new java.util.Date());
