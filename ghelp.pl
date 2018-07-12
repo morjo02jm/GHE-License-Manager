@@ -414,11 +414,11 @@ sub processWarn {
    $smtp->bcc (@emails, {Notify => ['NEVER'], SkipBad => 1});
 #   $smtp->bcc ('gaoyu01@ca.com', {Notify => ['NEVER'], SkipBad => 1});
    $smtp->data();
-   $smtp->datasend("Subject: Your GitHub Account Has Been Inactive for $warning Days\n");
+   $smtp->datasend("Subject: Your GitHub Enterprise account has been inactive for $warning days\n");
    $smtp->datasend("To: GHE Inactive Accounts");
    $smtp->datasend("\n");
    $smtp->datasend("\n");
-   $smtp->datasend("Dear GitHub Enterprise User, \n\nThis is an informational message about your GitHub Enterprise account. Your account for http:\/\/$gheserver has been inactive for $warning days and will be suspended after $idle days of inactivity. \nNote a suspended account will retain the configuration settings in the GitHub application but will lose application access. \nOnce your account is suspended, you will need to reactivate it in order to obtain access again. \nThe instruction to reactivate a suspended GitHub account will be attached in the suspension email notification to the corresponding suspended account owner.\n\nRegards,\nTools Services Team\n\n- Browse https://tools.ca.com for more tools related information\n- Create Service Desk ticket at http://servicedesk.ca.com if you have any questions or concerns\n");
+   $smtp->datasend("Dear GitHub Enterprise user, \n\nThis is an informational message about your GitHub Enterprise account. Your account for http:\/\/$gheserver has been inactive for $warning days and will be suspended after $idle days of inactivity. \nNote that a suspended account will retain all its settings and permissions, but will not have application access. \nOnce your account is suspended, you will need to unsuspend yourself in order to use the application again. \nWhat to do to unsuspend yourself is simple, and will be present in the mail notification you shall recieve if your account does get suspended.\n\nRegards,\nTools Services team\n");
    $smtp->dataend();
    $smtp->quit();
    foreach (@emails)
@@ -506,7 +506,7 @@ sub processSuspend {
     if (LDAPSearch($id))
 	{
      $to = "$id\@ca.com";
-	 my $subject = "Your GitHub Account Has Been Suspended"; 
+	 my $subject = "Your GitHub Enterprise account has been suspended"; 
      my $content = "Dear GitHub Enterprise user,<br><br>Your account $id in http:\/\/$gheserver has been inactive for $idle or more days. It has now been suspended in order to release the license it occupied.<br>The suspended account will retain all settings and permissions, but will not have application access.<p>If you need to use GitHub again, you can unsuspend yourself easily using the link below.<br><a href="http://devtools.ca.com/github/unsuspend"><b>Unsuspend your account</b></a><br><br>Regards,<br>Tools Services Team</p>";
 	 printv ("Account $id has been suspended for inactivity for $idle days - " . printtime());
 	 printlog ("Account $id has been suspended for inactivity for $idle days - " . printtime());
@@ -525,7 +525,7 @@ sub processSuspend {
 	}
    }
    $ldap->unbind;
-   printv ("Informing GitHub administratros about suspended accounts...");
+   printv ("Informing GitHub Enterprise administrators about suspended accounts...");
    $smtp = Net::SMTP->new('mail.ca.com', Debug=>1);
    $smtp->mail("$from");
    $smtp->to(@newadmins,{Notify => ['NEVER'], SkipBad => 1} );
@@ -535,7 +535,7 @@ sub processSuspend {
    $smtp->datasend("To: GitHub Enterprise Admins");
    $smtp->datasend("\n");
    $smtp->datasend("\n");
-   $smtp->datasend("Dear GitHub Administrator, <br><br><b>GitHub Enterprise License Usage</b><br><table><tr><td>Server:</td><td>$gheserver</td></tr>$htmlusage<\/table><br>This is to inform you that the following $count GitHub user accounts that are inactive for $idle or more days are suspended. <br>" . join("<br>", @ids) . "<br>The counts of the GitHub Enterprise server license seats should be updated in less than 1 hour. <br><br>Regards,<br>Tools Services Team");
+   $smtp->datasend("Dear GitHub Enterprise administrator, <br><br><b>GitHub Enterprise license usage</b><br><table><tr><td>Server:</td><td>$gheserver</td></tr>$htmlusage<\/table><br>This is to inform you that the following $count GitHub Enterprise user accounts that were inactive for $idle or more days are suspended. <br>" . join("<br>", @ids) . "<br>The counts of the GitHub Enterprise server license seats should be updated in less than 1 hour. <br><br>Regards,<br>Tools Services team");
    $smtp->dataend();
    printlog("Email is sent to the following administrators:\n" . "@newadmins");
    printv("Email is sent to the following administrators:\n" . "@newadmins");
@@ -564,7 +564,7 @@ sub processSuspend {
    $smtp->datasend("To: GitHub Enterprise Admins");   
    $smtp->datasend("\n");
    $smtp->datasend("\n");
-   $smtp->datasend("Dear GitHub Enterprise Administrator, <br><br>The current available GitHub license count is below $notifythreshhold in server, $gheserver.<br>This is to inform you that there is no GitHub user account that is inactive for $idle or more days to suspend at this time.<br><br><b>GitHub Enterprise License Usage</b><br><table><tr><td>Server:</td><td>$gheserver</td></tr>$htmlusage<\/table><br><br>Regards,<br>Tools Services Team");
+   $smtp->datasend("Dear GitHub Enterprise administrator, <br><br>The current available GitHub license count is below $notifythreshhold in server, $gheserver.<br>This is to inform you that there is no GitHub user account that is inactive for $idle or more days to suspend at this time.<br><br><b>GitHub Enterprise License Usage</b><br><table><tr><td>Server:</td><td>$gheserver</td></tr>$htmlusage<\/table><br><br>Regards,<br>Tools Services team");
    $smtp->dataend();
    printlog ("GitHub Server, $gheserver, administrators have been notified.\n" . "@newadmins");   
    printv ("GitHub Server, $gheserver, administrators have been notified.\n" . "@newadmins");  
