@@ -507,7 +507,7 @@ sub processSuspend {
 	{
      $to = "$id\@ca.com";
 	 my $subject = "Your GitHub Account Has Been Suspended"; 
-     my $content = "Dear GitHub Enterprise User, <br><br>Your GitHub Enterprise account $id in http:\/\/$gheserver has been inactive for $idle or more days. It is suspended to release a corresponding seat license occupied. <br>A suspended account will retain the configuration settings in the GitHub application but will lose application access. <p>If you need to obtain access again, please click the link below.<br><br><a href=$webserver/ghe/reactivate.jsp?name=$id&server=$gheserver>Reactivate My GitHub Account</a><br>After your account is reactivated, please ensure your activity timestamp is updated by signing in to https:\/\/$gheserver.<br><br>Regards,<br>Tools Services Team<p>- Browse https://tools.ca.com for more tools related information<br>- Create Service Desk ticket at http://servicedesk.ca.com if you have any questions or concerns";
+     my $content = "Dear GitHub Enterprise user,<br><br>Your account $id in http:\/\/$gheserver has been inactive for $idle or more days. It has now been suspended in order to release the license it occupied.<br>The suspended account will retain all settings and permissions, but will not have application access.<p>If you need to use GitHub again, you can unsuspend yourself easily using the link below.<br><a href="http://devtools.ca.com/github/unsuspend"><b>Unsuspend your account</b></a><br><br>Regards,<br>Tools Services Team</p>";
 	 printv ("Account $id has been suspended for inactivity for $idle days - " . printtime());
 	 printlog ("Account $id has been suspended for inactivity for $idle days - " . printtime());
 	 my $msg = MIME::Lite->new(  
