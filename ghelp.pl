@@ -418,7 +418,7 @@ sub processWarn {
    $smtp->datasend("To: GHE Inactive Accounts");
    $smtp->datasend("\n");
    $smtp->datasend("\n");
-   $smtp->datasend("Dear GitHub Enterprise user, \n\nThis is an informational message about your GitHub Enterprise account. Your account for http:\/\/$gheserver has been inactive for $warning days and will be suspended after $idle days of inactivity. \nNote that a suspended account will retain all its settings and permissions, but will not have application access. \nOnce your account is suspended, you will need to unsuspend yourself in order to use the application again. \nWhat to do to unsuspend yourself is simple, and will be present in the mail notification you shall recieve if your account does get suspended.\n\nRegards,\nTools Services team\n");
+   $smtp->datasend("Dear GitHub Enterprise user, \n\nThis is an informational message about your GitHub Enterprise account. Your account for https:\/\/$gheserver has been inactive for $warning days and will be suspended after $idle days of inactivity. \nThe suspended account will retain all settings and permissions, but not have access to login and use the application. \nOnce your account is suspended, you will need to unsuspend yourself in order to use the application again. \nUnsuspending yourself is very simple, and the procedure is mentioned in the mail notification you shall recieve if your account does get suspended.\n\nRegards,\nTools Services team\n");
    $smtp->dataend();
    $smtp->quit();
    foreach (@emails)
