@@ -507,7 +507,7 @@ sub processSuspend {
 	{
      $to = "$id\@ca.com";
 	 my $subject = "Your GitHub Enterprise account has been suspended"; 
-     my $content = "Dear GitHub Enterprise user,<br><br>Your account $id in http:\/\/$gheserver has been inactive for $idle or more days. It has now been suspended in order to release the license it occupied.<br>The suspended account will retain all settings and permissions, but will not have application access.<p>If you need to use GitHub again, you can unsuspend yourself easily using the link below.<br><a href="http://devtools.ca.com/github/unsuspend"><b>Unsuspend your account</b></a><br><br>Regards,<br>Tools Services Team</p>";
+     my $content = "Dear GitHub Enterprise user,<br><br>Your account $id in https:\/\/$gheserver has been inactive for $idle or more days. It has been suspended to avoid dormant users occupying a GitHub Enterprise license.<br>The suspended account will retain all its settings and permissions, but not have access to login and use the application.<p>If you need to use GitHub again, you can unsuspend yourself easily using the link below.<br><a href="http://devtools.ca.com/github/unsuspend"><b>Unsuspend your account</b></a><br><br>Regards,<br>Tools Services Team</p>";
 	 printv ("Account $id has been suspended for inactivity for $idle days - " . printtime());
 	 printlog ("Account $id has been suspended for inactivity for $idle days - " . printtime());
 	 my $msg = MIME::Lite->new(  
