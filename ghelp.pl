@@ -423,8 +423,8 @@ sub processWarn {
    $smtp->quit();
    foreach (@emails)
    {
-     printlog("Account $_ has been warned for inactivity for 60 days - " . printtime());
-	 printv("Account $_ has been warned for inactivity for 60 days - " . printtime());
+     printlog("Account $_ has been warned for inactivity for 30 days - " . printtime());
+	 printv("Account $_ has been warned for inactivity for 30 days - " . printtime());
    }
   }
   else 
